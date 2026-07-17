@@ -5,8 +5,9 @@
     <File Path="docker-compose.yml" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="Api/MarketPulse.Api.csproj" />
+    <Project Path="src/MarketPulse.Api/MarketPulse.Api.csproj" />
   </Folder>
   <Folder Name="/src/MarketPulse.Frontend/" />
   <Folder Name="/tests/" />
 </Solution>
+
