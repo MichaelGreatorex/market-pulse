@@ -1,4 +1,5 @@
-﻿using MarketPulse.Api.Services;
+﻿using MarketPulse.Api.DTOs;
+using MarketPulse.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MarketPulse.Api.Controllers;
@@ -22,5 +23,18 @@ public class FinancialInstrumentsController : ControllerBase
             await _financialInstrumentService.GetAllAsync();
 
         return Ok(instruments);
+    }
+
+    [HttpGet("{ticker}")]
+    public async Task<ActionResult<FinancialInstrumentDto>> GetByTicker(string ticker)
+    {
+        var instrument = await _financialInstrumentService.GetByTickerAsync(ticker);
+
+        if (instrument is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(instrument);
     }
 }
