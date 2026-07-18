@@ -16,7 +16,7 @@ public class FinancialInstrumentsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult> Get()
     {
         var instruments =
             await _financialInstrumentService.GetAllAsync();

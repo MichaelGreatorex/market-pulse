@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
     <Folder Include="HealthChecks\" />
     <Folder Include="Logging\" />
     <Folder Include="Middleware\" />
