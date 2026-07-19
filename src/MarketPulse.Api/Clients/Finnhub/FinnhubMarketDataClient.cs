@@ -12,8 +12,8 @@ public class FinnhubMarketDataClient : IMarketDataClient
     private readonly ILogger<FinnhubMarketDataClient> _logger;
 
     public async Task<FinnhubQuoteResponse?> GetQuoteAsync(
-    string ticker,
-    CancellationToken cancellationToken = default)
+        string ticker,
+        CancellationToken cancellationToken = default)
     {
         _logger.LogInformation(
             "Requesting latest quote for {Ticker}",

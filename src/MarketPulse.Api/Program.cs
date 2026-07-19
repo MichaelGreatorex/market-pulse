@@ -5,6 +5,7 @@ using MarketPulse.Api.Services;
 using MarketPulse.Api.Configuration;
 using MarketPulse.Api.Clients;
 using MarketPulse.Api.Clients.Finnhub;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +29,10 @@ builder.Services.AddHttpClient<IMarketDataClient, FinnhubMarketDataClient>(
                 Microsoft.Extensions.Options.IOptions<FinnhubOptions>>()
             .Value;
 
-        client.BaseAddress = new Uri(options.BaseUrl);
+        client.BaseAddress = new Uri(
+            options.BaseUrl.TrimEnd('/') + "/");
+
+        client.Timeout = TimeSpan.FromSeconds(10);
     });
 
 builder.Services.AddControllers();
