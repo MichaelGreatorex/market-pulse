@@ -1,10 +1,11 @@
-﻿using System.Linq.Expressions;
-using MarketPulse.Api.Data;
+﻿using MarketPulse.Api.Data;
 using MarketPulse.Api.DTOs;
 using MarketPulse.Api.Models;
 using MarketPulse.Api.Models.Pagination;
 using MarketPulse.Api.Models.Queries;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MarketPulse.Api.Services;
 

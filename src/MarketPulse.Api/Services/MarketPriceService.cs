@@ -37,14 +37,49 @@ public class MarketPriceService
         string ticker,
         PriceHistoryQuery query)
     {
+        ticker = ticker.Trim().ToUpperInvariant();
+
+        var prices = _context.MarketPrices
+            .AsNoTracking()
+            .Where(p => p.FinancialInstrument.Ticker == ticker);
+
+        if (query.From.HasValue)
+        {
+            var from = DateTime.SpecifyKind(query.From.Value, DateTimeKind.Utc);
+
+            prices = prices.Where(p => p.TimestampUtc >= from);
+        }
+
+        if (query.To.HasValue)
+        {
+            var to = DateTime.SpecifyKind(query.To.Value, DateTimeKind.Utc);
+
+            prices = prices.Where(p => p.TimestampUtc <= to);
+        }
+
+        var totalCount = await prices.CountAsync();
+
+        var items = await prices
+            .OrderByDescending(p => p.TimestampUtc)
+            .Skip(query.Skip)
+            .Take(query.Take)
+            .Select(p => new MarketPriceDto
+            {
+                TimestampUtc = p.TimestampUtc,
+                ClosePrice = p.ClosePrice
+            })
+            .ToListAsync();
+
         return new PagedResult<MarketPriceDto>
         {
-            Items = [],
+            Items = items,
             Page = query.Page,
             PageSize = query.PageSize,
-            TotalCount = 0
+            TotalCount = totalCount
         };
+
     }
+
 
 
 }
