@@ -3,6 +3,8 @@ using MarketPulse.Api.Models.Pagination;
 using MarketPulse.Api.Models.Queries;
 using MarketPulse.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MarketPulse.Api.Controllers;
 
@@ -45,7 +47,7 @@ public class FinancialInstrumentsController : ControllerBase
         return Ok(instrument);
     }
 
-    [HttpGet("{ticker}/prices/latest")] 
+    [HttpGet("{ticker}/prices/latest")]
     public async Task<ActionResult<MarketPriceDto>> GetLatestPrice(
         [FromRoute] string ticker)
     {
@@ -65,5 +67,7 @@ public class FinancialInstrumentsController : ControllerBase
         var history = await _marketPriceService.GetHistoryAsync(ticker, query);
         return Ok(history);
     }
-    
 }
+
+
+

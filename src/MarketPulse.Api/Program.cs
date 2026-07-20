@@ -18,6 +18,8 @@ builder.Services.AddScoped<FinancialInstrumentService>();
 
 builder.Services.AddScoped<MarketPriceService>();
 
+builder.Services.AddScoped<MarketPriceImportService>();
+
 builder.Services.Configure<FinnhubOptions>(
     builder.Configuration.GetSection(FinnhubOptions.SectionName));
 
