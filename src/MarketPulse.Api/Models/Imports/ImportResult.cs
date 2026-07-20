@@ -9,4 +9,7 @@ public class ImportResult
     public int Failed { get; init; }
 
     public long DurationMs { get; init; }
+
+    public IReadOnlyList<ImportError> Errors { get; init; }
+        = Array.Empty<ImportError>();
 }

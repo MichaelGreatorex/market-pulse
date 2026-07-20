@@ -1,5 +1,6 @@
 ﻿using MarketPulse.Api.Clients;
 using MarketPulse.Api.Data;
+using MarketPulse.Api.DTOs.Finnhub;
 using MarketPulse.Api.Mappers;
 using MarketPulse.Api.Models;
 using MarketPulse.Api.Models.Imports;
@@ -30,7 +31,10 @@ public class MarketPriceImportService
         var stopwatch = Stopwatch.StartNew();
         
         var skipped = 0;
-        
+
+        var failed = 0;
+        var errors = new List<ImportError>();
+
         var instruments = await _context.FinancialInstruments
             .Where(i => i.IsActive)
             .AsNoTracking()
@@ -44,12 +48,42 @@ public class MarketPriceImportService
                 "Importing latest price for {Ticker}",
                 instrument.Ticker);
 
-            var quote = await _marketDataClient.GetQuoteAsync(
-                instrument.Ticker,
-                cancellationToken);
+            FinnhubQuoteResponse? quote;
+
+            try
+            {
+                quote = await _marketDataClient.GetQuoteAsync(
+                    instrument.Ticker,
+                    cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                failed++;
+
+                errors.Add(new ImportError
+                {
+                    Ticker = instrument.Ticker,
+                    Message = ex.Message
+                });
+
+                _logger.LogError(
+                    ex,
+                    "Failed importing price for {Ticker}",
+                    instrument.Ticker);
+
+                continue;
+            }
 
             if (quote is null)
             {
+                failed++;
+
+                errors.Add(new ImportError
+                {
+                    Ticker = instrument.Ticker,
+                    Message = "No quote returned from market data provider"
+                });
+
                 _logger.LogWarning(
                     "No quote returned for {Ticker}",
                     instrument.Ticker);
@@ -101,8 +135,9 @@ public class MarketPriceImportService
         {
             Imported = prices.Count,
             Skipped = skipped,
-            Failed = 0,
-            DurationMs = stopwatch.ElapsedMilliseconds
+            Failed = failed,
+            DurationMs = stopwatch.ElapsedMilliseconds,
+            Errors = errors
         };
     }
 }
