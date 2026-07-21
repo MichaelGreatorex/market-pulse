@@ -1,4 +1,4 @@
-# MarketPulse
+# MarketPulse API
 
 > A production-style financial market data platform built with **ASP.NET
 > Core 10**, **PostgreSQL**, **Entity Framework Core**, **Docker**, and
