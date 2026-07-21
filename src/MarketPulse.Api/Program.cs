@@ -31,6 +31,18 @@ builder.Services.AddHostedService<MarketPriceImportWorker>();
 
 builder.Services.AddScoped<DashboardService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
+
 builder.Services.Configure<MarketDataOptions>(
     builder.Configuration.GetSection(MarketDataOptions.SectionName));
 
@@ -51,13 +63,13 @@ builder.Services.AddHttpClient<IMarketDataClient, FinnhubMarketDataClient>(
         client.Timeout = TimeSpan.FromSeconds(10);
     });
 
+
+
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -69,8 +81,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("Frontend");
 app.UseAuthorization();
+
+
 
 app.MapControllers();
 
