@@ -4,5 +4,5 @@ public class MarketDataOptions
 {
     public const string SectionName = "MarketData";
 
-    public int ImportIntervalMinutes { get; init; } = 15;
+    public int ImportIntervalMinutes { get; init; } = 60;
 }

@@ -5,6 +5,7 @@ using MarketPulse.Api.Data;
 using MarketPulse.Api.HealthChecks;
 using MarketPulse.Api.Services;
 using MarketPulse.Api.Services.Background;
+using MarketPulse.Api.Services.Monitoring;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -39,6 +40,9 @@ public static class ServiceCollectionExtensions
         // Configure options from appsettings.json
         services.Configure<MarketDataOptions>(
             configuration.GetSection(MarketDataOptions.SectionName));
+
+        // Register system status service as a singleton
+        services.AddSingleton<SystemStatusService>();
 
         // Configure Finnhub options from appsettings.json
         services.Configure<FinnhubOptions>(
