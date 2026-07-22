@@ -1,5 +1,7 @@
 ﻿using MarketPulse.Api.Data;
+using MarketPulse.Api.Dtos;
 using MarketPulse.Api.DTOs.Dashboard;
+using MarketPulse.Api.Services.Monitoring;
 using Microsoft.EntityFrameworkCore;
 
 namespace MarketPulse.Api.Services;
@@ -7,10 +9,12 @@ namespace MarketPulse.Api.Services;
 public class DashboardService
 {
     private readonly AppDbContext _context;
+    private readonly SystemStatusService _systemStatus;
 
-    public DashboardService(AppDbContext context)
+    public DashboardService(AppDbContext context, SystemStatusService systemStatus)
     {
         _context = context;
+        _systemStatus = systemStatus;
     }
 
     public async Task<DashboardResponse> GetDashboardAsync(
@@ -38,13 +42,20 @@ public class DashboardService
             })
             .ToListAsync(cancellationToken);
 
+
         return new DashboardResponse
         {
-            Status = "Healthy",
             TrackedInstruments = trackedInstruments,
             MarketPrices = marketPrices,
             LastImportUtc = lastImport,
-            Instruments = instruments
+            Instruments = instruments,
+            SystemStatus = new SystemStatusDto
+            {
+                Healthy = _systemStatus.Healthy,
+                LastAttemptUtc = _systemStatus.LastAttemptUtc,
+                LastSuccessfulRunUtc = _systemStatus.LastSuccessfulRunUtc,
+                LastError = _systemStatus.LastError
+            },
         };
     }
 }
