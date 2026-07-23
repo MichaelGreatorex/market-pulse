@@ -44,6 +44,9 @@ public static class ServiceCollectionExtensions
         // Register system status service as a singleton
         services.AddSingleton<SystemStatusService>();
 
+        // Register market status service as a singleton
+        services.AddSingleton<MarketSessionService>();
+
         // Configure Finnhub options from appsettings.json
         services.Configure<FinnhubOptions>(
             configuration.GetSection(FinnhubOptions.SectionName));

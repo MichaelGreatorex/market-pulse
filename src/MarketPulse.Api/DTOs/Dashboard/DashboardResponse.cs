@@ -13,4 +13,6 @@ public class DashboardResponse
     public List<DashboardInstrument> Instruments { get; init; } = [];
 
     public SystemStatusDto SystemStatus { get; set; } = new();
+
+    public MarketStatusDto MarketStatus { get; set; } = new();
 }

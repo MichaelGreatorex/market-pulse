@@ -1,30 +1,37 @@
-﻿namespace MarketPulse.Api.Services.Monitoring;
+﻿using MarketPulse.Api.Dtos;
+
+namespace MarketPulse.Api.Services.Monitoring;
 
 public class SystemStatusService
 {
-    public DateTimeOffset? LastAttemptUtc { get; private set; }
-
-    public DateTimeOffset? LastSuccessfulRunUtc { get; private set; }
-
-    public bool Healthy { get; private set; }
-
-    public string? LastError { get; private set; }
+    private readonly SystemStatusDto _status = new();
 
     public void RecordAttempt()
     {
-        LastAttemptUtc = DateTimeOffset.UtcNow;
+        _status.LastAttemptUtc = DateTimeOffset.UtcNow;
     }
 
     public void RecordSuccess()
     {
-        Healthy = true;
-        LastSuccessfulRunUtc = DateTimeOffset.UtcNow;
-        LastError = null;
+        _status.Healthy = true;
+        _status.LastSuccessfulRunUtc = DateTimeOffset.UtcNow;
+        _status.LastError = null;
     }
 
-    public void RecordFailure(Exception exception)
+    public void RecordFailure(Exception ex)
     {
-        Healthy = false;
-        LastError = exception.Message;
+        _status.Healthy = false;
+        _status.LastError = ex.Message;
+    }
+
+    public SystemStatusDto GetStatus()
+    {
+        return new SystemStatusDto
+        {
+            Healthy = _status.Healthy,
+            LastAttemptUtc = _status.LastAttemptUtc,
+            LastSuccessfulRunUtc = _status.LastSuccessfulRunUtc,
+            LastError = _status.LastError
+        };
     }
 }
