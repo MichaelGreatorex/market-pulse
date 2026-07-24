@@ -33,6 +33,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<MarketPriceService>();
         services.AddScoped<MarketPriceImportService>();
         services.AddScoped<DashboardService>();
+        services.AddScoped<DashboardOverviewService>();
 
         // Register background worker for market price import
         services.AddHostedService<MarketPriceImportWorker>();
